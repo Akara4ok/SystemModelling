@@ -45,9 +45,15 @@ void Process::finish() {
     Logger::log(mCurrentTime, mName, "Finish");
 
     for (auto& mProcessor: mProcessors) {
-        if(mProcessor->mBlockingPredicate(this)){
+        if(mProcessor->mBlockingPredicate && mProcessor->mBlockingPredicate(this)){
+            if(!mProcessor->isBlocked){
+                Logger::log(mCurrentTime, mName, "Block subprocess");
+            }
             mProcessor->isBlocked = true;
         } else {
+            if(mProcessor->isBlocked){
+                Logger::log(mCurrentTime, mName, "Unblock subprocess");
+            }
             mProcessor->isBlocked = false;
         }
     }
@@ -55,7 +61,7 @@ void Process::finish() {
     for (auto& mProcessor: mProcessors) {
         if (std::abs(mProcessor->mNextTime - mCurrentTime) < 0.000001) {
             mProcessor->mProcessing = false;
-            if (mQueue->pop()) {
+            if (mQueue->pop() && !mProcessor->isBlocked) {
                 start();
             } else {
                 mProcessor->mNextTime = std::numeric_limits<double>::max();
@@ -153,4 +159,9 @@ void Process::setInitialValues(int currentQueueSize, std::vector<std::shared_ptr
 
 double Process::getAverageLoad() {
     return mAverageLoad / mCurrentTime;
+}
+
+void Process::setBlocker(int num, std::function<bool(Process*)> blockingFunc) {
+    mProcessors[num]->isBlocked = blockingFunc(this);
+    mProcessors[num]->mBlockingPredicate = std::move(blockingFunc);
 }

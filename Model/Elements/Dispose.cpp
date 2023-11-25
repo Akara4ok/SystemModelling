@@ -8,7 +8,7 @@
 #include <utility>
 
 Dispose::Dispose(std::string name) : Element(std::move(name), nullptr) {
-
+    mNextTime = std::numeric_limits<double>::max();
 }
 
 void Dispose::start() {

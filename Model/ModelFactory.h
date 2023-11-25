@@ -9,9 +9,7 @@
 
 class ModelFactory {
 public:
-    static Model createTask1();
-    static Model createTask2();
-    static Model createTask3();
+    static Model createModel1();
 };
 
 

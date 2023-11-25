@@ -13,7 +13,7 @@
 template<typename T>
 class PredicateElementPicker : public ProbabilityElementPicker, public TypedElementPicker<T> {
 public:
-    PredicateElementPicker(std::vector<NextElement> elements, std::optional<std::function<bool(T element)>> pred);
+    PredicateElementPicker(std::vector<NextElement> elements, std::optional<std::function<bool(T element)>> pred = {});
 
     std::shared_ptr<Element> getNextElement(T particle);
 

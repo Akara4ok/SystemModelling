@@ -6,8 +6,8 @@
 int main() {
     srand(time(NULL));
     Logger logger("Logs.csv");
-    Model model1 = ModelFactory::createTask3();
-    model1.simulate(10000);
+    Model model1 = ModelFactory::createModel1();
+    model1.simulate(100000);
     Logger::saveLogFile();
 
 }

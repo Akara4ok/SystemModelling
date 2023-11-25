@@ -17,6 +17,7 @@ public:
         double mProb;
 
         NextElement(std::shared_ptr<Element> element, double prob) : mElement(element), mProb(prob){}
+        NextElement(std::shared_ptr<Element> element) : mElement(element), mProb(0.0){}
     };
 
     ProbabilityElementPicker(std::vector<NextElement> elements);

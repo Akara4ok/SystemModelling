@@ -59,6 +59,8 @@ public:
     void setInitialValues(int currentQueueSize, std::vector<std::shared_ptr<SubProcess>> processors);
     virtual std::vector<std::shared_ptr<SubProcess>> getProcessors() const {return mProcessors;}
 
+    void setBlocker(int num, std::function<bool(Process*)> blockingFunc);
+
 private:
     double mAverageLoad{};
     double mSummedElements{};

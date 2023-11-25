@@ -15,7 +15,7 @@ FirstPhaseMachine::FirstPhaseMachine(std::string name, std::shared_ptr<TimeGener
 
 FirstPhaseMachine::FirstPhaseMachine(std::string name, std::shared_ptr<TimeGenerator> gen, std::shared_ptr<PredicateElementPicker<int>> elementPicker,
                                      std::shared_ptr<TypedQueue<int>> queue, int processorNum) : Process(std::move(name), gen, elementPicker, queue, processorNum),
-                                                            mTypedQueue(queue) {
+                                                            mTypedQueue(queue), mPredElementPicker(elementPicker) {
     for (int i = 0; i < processorNum; ++i) {
         mTypedProcessors.push_back(std::make_shared<SubMachineProcess>());
     }
@@ -76,5 +76,8 @@ void FirstPhaseMachine::start() {
 }
 
 std::shared_ptr<Element> FirstPhaseMachine::getNextElement(int attempt) {
+    if(!mPredElementPicker){
+        return {};
+    }
     return mPredElementPicker->getNextElement(attempt);
 }
