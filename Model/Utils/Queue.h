@@ -2,8 +2,8 @@
 // Created by vlad on 10/29/23.
 //
 
-#ifndef LAB3_QUEUE_H
-#define LAB3_QUEUE_H
+#ifndef QUEUE_H
+#define QUEUE_H
 
 #include "vector"
 #include <limits>
@@ -13,8 +13,8 @@ public:
     Queue(int queueSize = std::numeric_limits<int>::max());
 
     void setCurrentQueueSize(int queueSize) { mQueueSize = queueSize; }
-    virtual bool increase();
-    virtual bool decrease();
+    virtual bool push();
+    virtual bool pop();
     virtual int getCurrentQueueSize() const { return mQueueSize; }
     double getAverageQueue(double currentTime) const { return mSummedQueue / currentTime; }
     void updateAverageQueue(double timeDiff);

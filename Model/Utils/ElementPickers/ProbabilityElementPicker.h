@@ -21,7 +21,8 @@ public:
 
     ProbabilityElementPicker(std::vector<NextElement> elements);
     std::shared_ptr<Element> getNextElement() override;
-private:
+
+protected:
     std::vector<NextElement> mNextElements;
     UniformDist mUniformDist;
 };

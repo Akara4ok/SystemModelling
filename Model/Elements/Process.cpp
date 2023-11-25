@@ -25,14 +25,14 @@ Process::Process(std::string name, std::shared_ptr<TimeGenerator> gen, std::shar
 
 void Process::start() {
     for (auto& mProcessor: mProcessors) {
-        if (!mProcessor->mProcessing) {
+        if (!mProcessor->mProcessing && !mProcessor->isBlocked) {
             Logger::log(mCurrentTime, mName, "Started");
             mProcessor->mProcessing = true;
             mProcessor->mNextTime = mCurrentTime + mGen->generateNext();
             return;
         }
     }
-    if (mQueue->increase()) {
+    if (mQueue->push()) {
         Logger::log(mCurrentTime, mName, "Added to Queue");
         return;
     }
@@ -45,9 +45,17 @@ void Process::finish() {
     Logger::log(mCurrentTime, mName, "Finish");
 
     for (auto& mProcessor: mProcessors) {
+        if(mProcessor->mBlockingPredicate(this)){
+            mProcessor->isBlocked = true;
+        } else {
+            mProcessor->isBlocked = false;
+        }
+    }
+
+    for (auto& mProcessor: mProcessors) {
         if (std::abs(mProcessor->mNextTime - mCurrentTime) < 0.000001) {
             mProcessor->mProcessing = false;
-            if (mQueue->decrease()) {
+            if (mQueue->pop()) {
                 start();
             } else {
                 mProcessor->mNextTime = std::numeric_limits<double>::max();

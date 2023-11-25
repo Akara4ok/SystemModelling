@@ -9,7 +9,7 @@ Queue::Queue(int queueSize) : mMaxQueueSize(queueSize) {
 
 }
 
-bool Queue::increase() {
+bool Queue::push() {
     if(mQueueSize >= mMaxQueueSize){
         return false;
     }
@@ -17,7 +17,7 @@ bool Queue::increase() {
     return true;
 }
 
-bool Queue::decrease() {
+bool Queue::pop() {
     if(mQueueSize <= 0){
         return false;
     }

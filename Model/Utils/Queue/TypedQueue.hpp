@@ -12,8 +12,8 @@
 template <typename T>
 class TypedQueue : public Queue{
 public:
-    bool push(std::optional<T> element);
-    std::optional<T> pop();
+    bool push(T element);
+    std::optional<T> popElement();
     int getCurrentQueueSize() const { return mQueue.size(); }
 
 private:
@@ -21,9 +21,8 @@ private:
 };
 
 template <typename T>
-bool TypedQueue<T>::push(std::optional<T> element)
+bool TypedQueue<T>::push(T element)
 {
-
     if(mQueue.size() >= mMaxQueueSize){
         return false;
     }
@@ -32,7 +31,7 @@ bool TypedQueue<T>::push(std::optional<T> element)
 }
 
 template <typename T>
-std::optional<T> TypedQueue<T>::pop(){
+std::optional<T> TypedQueue<T>::popElement(){
     if(mQueue.empty()){
         return {};
     }

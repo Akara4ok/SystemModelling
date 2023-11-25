@@ -8,7 +8,7 @@
 #include "Elements/Process.h"
 #include "Elements/Create.h"
 #include "Elements/TypedCreate.h"
-#include "Elements/TypedProcess.h"
+#include "Elements/FirstPhaseMachine.h"
 #include "Elements/PriorTypedProcess.h"
 #include "Elements/ChangingTypedProcess.h"
 #include "Utils/TimeGenerator.h"
@@ -165,7 +165,7 @@ Model ModelFactory::createTask3() {
     toReception->setSummaryFunction(emptySummary);
 
     std::shared_ptr<Element> analysis(
-            new TypedProcess("Analysis",
+            new FirstPhaseMachine("Analysis",
                              std::make_shared<TimeGenerator>(new ErlangDist(4, 2)),
                              std::make_shared<TypedPicker>(std::map<int, std::shared_ptr<Element>>({
                                        std::make_pair(1, toReception),
@@ -177,7 +177,7 @@ Model ModelFactory::createTask3() {
     );
 
     std::function<void(Element*)> summaryAnalysis = [](Element* analysis) {
-        TypedProcess* castedAnalysis = dynamic_cast<TypedProcess*>(analysis);
+        FirstPhaseMachine* castedAnalysis = dynamic_cast<FirstPhaseMachine*>(analysis);
         std::cout << "------------\n";
         std::cout << "Name: " << castedAnalysis->getName() << "\n";
         std::cout << "Processed: " << castedAnalysis->getProceed() << "\n";
@@ -190,7 +190,7 @@ Model ModelFactory::createTask3() {
     analysis->setSummaryFunction(summaryAnalysis);
 
     std::shared_ptr<Element> registration(
-            new TypedProcess("Registration",
+            new FirstPhaseMachine("Registration",
                              std::make_shared<TimeGenerator>(new ErlangDist(4.5, 3)),
                              std::make_shared<PriorityElementPicker>(std::vector<std::shared_ptr<Element>>({analysis})),
                              std::make_shared<TypedQueue>()
@@ -200,7 +200,7 @@ Model ModelFactory::createTask3() {
     registration->setSummaryFunction(emptySummary);
 
     std::shared_ptr<Element> toRegistration(
-            new TypedProcess("To Registration",
+            new FirstPhaseMachine("To Registration",
                              std::make_shared<TimeGenerator>(new UniformDist(), [](double n){
                                  return 5 * n + 3;
                              }),
@@ -211,7 +211,7 @@ Model ModelFactory::createTask3() {
     );
 
     toRegistration->setSummaryFunction([](Element* toRegistration){
-        TypedProcess* castedToRegistration = dynamic_cast<TypedProcess*>(toRegistration);
+        FirstPhaseMachine* castedToRegistration = dynamic_cast<FirstPhaseMachine*>(toRegistration);
         std::cout << "------------\n";
         std::cout << "Name: " << castedToRegistration->getName() << "\n";
         std::cout << "Interval: " << castedToRegistration->getCurrentTime() / castedToRegistration->getProceed() << "\n";
@@ -219,7 +219,7 @@ Model ModelFactory::createTask3() {
     });
 
     std::function<void(Element*)> summaryPalata = [](Element* palata) {
-        TypedProcess* castedPalata = dynamic_cast<TypedProcess*>(palata);
+        FirstPhaseMachine* castedPalata = dynamic_cast<FirstPhaseMachine*>(palata);
         std::cout << "------------\n";
         std::cout << "Name: " << castedPalata->getName() << "\n";
         std::cout << "Processed: " << castedPalata->getProceed() << "\n";
@@ -231,7 +231,7 @@ Model ModelFactory::createTask3() {
     };
 
     std::shared_ptr<Element> toPalata(
-            new TypedProcess("To Palata",
+            new FirstPhaseMachine("To Palata",
                              std::make_shared<TimeGenerator>(new UniformDist(), [](double n){
                                  return 5 * n + 3;
                              }),

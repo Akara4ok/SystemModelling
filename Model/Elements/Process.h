@@ -9,9 +9,13 @@
 #include <numeric>
 #include "../Utils/Queue.h"
 
+class Process;
+
 struct SubProcess {
     bool mProcessing{};
     double mNextTime{};
+    bool isBlocked{};
+    std::function<bool(Process*)> mBlockingPredicate;
 
     SubProcess() {
         mNextTime = std::numeric_limits<double>::max();
