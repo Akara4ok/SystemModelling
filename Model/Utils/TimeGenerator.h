@@ -2,8 +2,8 @@
 // Created by vlad on 10/9/23.
 //
 
-#ifndef LAB2_TIMEGENERATOR_H
-#define LAB2_TIMEGENERATOR_H
+#ifndef TIMEGENERATOR_H
+#define TIMEGENERATOR_H
 
 #include <functional>
 #include <memory>

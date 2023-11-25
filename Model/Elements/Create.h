@@ -2,8 +2,8 @@
 // Created by vlad on 10/8/23.
 //
 
-#ifndef LAB2_CREATE_H
-#define LAB2_CREATE_H
+#ifndef CREATE_H
+#define CREATE_H
 
 #include "Element.h"
 
@@ -23,4 +23,4 @@ public:
 };
 
 
-#endif //LAB2_CREATE_H
+#endif //CREATE_H

@@ -18,7 +18,7 @@
 #include "../Distribution/ErlangDist.h"
 #include "../Distribution/NormalDist.h"
 #include "Utils/ElementPickers/PriorityElementPicker.h"
-#include "Utils/ElementPickers/ProbElementPicker.h"
+#include "Utils/ElementPickers/ProbabilityElementPicker.h"
 #include "Utils/ElementPickers/FirstElementPicker.h"
 #include "Utils/ElementPickers/TypedPicker.h"
 #include <map>
@@ -41,15 +41,15 @@ Model ModelFactory::createTask1() {
     std::shared_ptr<Element> process1(
             new Process("Process1",
                         std::make_shared<TimeGenerator>(new ExpDist(3)),
-                        std::shared_ptr<ElementPicker>(new ProbElementPicker({{process2, 0.25},
-                                                                              {process3, 0.75}})),
+                        std::shared_ptr<ElementPicker>(new ProbabilityElementPicker({{process2, 0.25},
+                                                                                     {process3, 0.75}})),
                         std::make_shared<Queue>(5)));
 
     std::shared_ptr<Element> create(
             new Create("Create",
                        std::make_shared<TimeGenerator>(new ExpDist(5)),
-                       std::shared_ptr<ElementPicker>(new ProbElementPicker({{process1, 0.5},
-                                                                             {process2, 0.5}}))
+                       std::shared_ptr<ElementPicker>(new ProbabilityElementPicker({{process1, 0.5},
+                                                                                    {process2, 0.5}}))
             ));
 
     std::vector<std::shared_ptr<Element>> elements;

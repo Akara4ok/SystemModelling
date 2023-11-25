@@ -2,8 +2,8 @@
 // Created by vlad on 10/8/23.
 //
 
-#ifndef LAB2_MODEL_H
-#define LAB2_MODEL_H
+#ifndef MODEL_H
+#define MODEL_H
 
 #include "Elements/Element.h"
 

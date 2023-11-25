@@ -2,15 +2,15 @@
 // Created by vlad on 10/29/23.
 //
 
-#ifndef LAB3_PROBELEMENTPICKER_H
-#define LAB3_PROBELEMENTPICKER_H
+#ifndef PROBABILITYELEMENTPICKER_H
+#define PROBABILITYELEMENTPICKER_H
 
 #include "../ElementPicker.h"
 #include "../../../Distribution/UniformDist.h"
 #include <vector>
 #include <memory>
 
-class ProbElementPicker : public ElementPicker {
+class ProbabilityElementPicker : public ElementPicker {
 public:
     struct NextElement{
         std::shared_ptr<Element> mElement;
@@ -19,7 +19,7 @@ public:
         NextElement(std::shared_ptr<Element> element, double prob) : mElement(element), mProb(prob){}
     };
 
-    ProbElementPicker(std::vector<NextElement> elements);
+    ProbabilityElementPicker(std::vector<NextElement> elements);
     std::shared_ptr<Element> getNextElement() override;
 private:
     std::vector<NextElement> mNextElements;
@@ -27,4 +27,4 @@ private:
 };
 
 
-#endif //LAB3_PROBELEMENTPICKER_H
+#endif //PROBABILITYELEMENTPICKER_H

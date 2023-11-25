@@ -2,8 +2,8 @@
 // Created by vlad on 10/8/23.
 //
 
-#ifndef LAB2_MODELFACTORY_H
-#define LAB2_MODELFACTORY_H
+#ifndef MODELFACTORY_H
+#define MODELFACTORY_H
 
 #include "Model.h"
 
@@ -15,4 +15,4 @@ public:
 };
 
 
-#endif //LAB2_MODELFACTORY_H
+#endif //MODELFACTORY_H

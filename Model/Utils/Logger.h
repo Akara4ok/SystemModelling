@@ -2,8 +2,8 @@
 // Created by vlad on 10/11/23.
 //
 
-#ifndef LAB2_LOGGER_H
-#define LAB2_LOGGER_H
+#ifndef LOGGER_H
+#define LOGGER_H
 
 #include <fstream>
 #include <string>

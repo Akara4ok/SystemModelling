@@ -2,8 +2,8 @@
 // Created by vlad on 10/29/23.
 //
 
-#ifndef LAB3_ELEMENTPICKER_H
-#define LAB3_ELEMENTPICKER_H
+#ifndef ELEMENTPICKER_H
+#define ELEMENTPICKER_H
 
 #include <memory>
 

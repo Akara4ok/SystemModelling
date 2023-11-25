@@ -2,13 +2,13 @@
 // Created by vlad on 10/29/23.
 //
 
-#include "ProbElementPicker.h"
+#include "ProbabilityElementPicker.h"
 
-ProbElementPicker::ProbElementPicker(std::vector<NextElement> elements) : mNextElements(elements){
+ProbabilityElementPicker::ProbabilityElementPicker(std::vector<NextElement> elements) : mNextElements(elements){
 
 }
 
-std::shared_ptr<Element> ProbElementPicker::getNextElement() {
+std::shared_ptr<Element> ProbabilityElementPicker::getNextElement() {
     double randNum = mUniformDist.generateNext();
     double sum = 0;
     int ind = 0;

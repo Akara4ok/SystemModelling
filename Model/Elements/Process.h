@@ -2,8 +2,8 @@
 // Created by vlad on 10/8/23.
 //
 
-#ifndef LAB2_PROCESS_H
-#define LAB2_PROCESS_H
+#ifndef PROCESS_H
+#define PROCESS_H
 
 #include "Element.h"
 #include <numeric>
@@ -65,4 +65,4 @@ protected:
 };
 
 
-#endif //LAB2_PROCESS_H
+#endif //PROCESS_H

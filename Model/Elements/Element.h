@@ -2,8 +2,8 @@
 // Created by vlad on 10/8/23.
 //
 
-#ifndef LAB2_ELEMENT_H
-#define LAB2_ELEMENT_H
+#ifndef ELEMENT_H
+#define ELEMENT_H
 
 #include <string>
 #include <memory>
@@ -55,4 +55,4 @@ protected:
 };
 
 
-#endif //LAB2_ELEMENT_H
+#endif //ELEMENT_H
