@@ -11,27 +11,12 @@
 
 class Process;
 
-struct SubProcess {
-    bool mProcessing{};
-    double mNextTime{};
-    bool isBlocked{};
-    std::function<bool(Process*)> mBlockingPredicate;
-    double mAverageLoad{};
-
-    SubProcess() {
-        mNextTime = std::numeric_limits<double>::max();
-    }
-
-    SubProcess(bool processing, double nextTime) : mProcessing(processing), mNextTime(nextTime) {
-    }
-};
-
 class Process : public Element {
 public:
-    Process(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<Queue> queue, int processorNum = 1);
+    Process(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<Queue> queue);
 
     Process(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<ElementPicker> elementPicker,
-            std::shared_ptr<Queue> queue, int processorNum = 1);
+            std::shared_ptr<Queue> queue);
 
     void start() override;
 
@@ -47,18 +32,17 @@ public:
 
     bool isFinished() override;
 
-    int getCurrentQueueSize();
-    virtual std::shared_ptr<Queue> getQueue() const {return mQueue;}
-    virtual double getAverageLoad(int procNum = 0);
+    int getCurrentQueueSize() const;
+    virtual double getAverageLoad();
     virtual void updateAverageLoad(double currentTime);
 
-    void setInitialValues(int currentQueueSize, std::vector<std::shared_ptr<SubProcess>> processors);
+    void setInitialValues(int currentQueueSize, bool isProcessing);
 
-    void setBlocker(int num, std::function<bool(Process*)> blockingFunc);
-
-private:
-    std::vector<std::shared_ptr<SubProcess>> mProcessors;
+protected:
     std::shared_ptr<Queue> mQueue;
+    bool mProcessing{};
+    double mNextTime{};
+    double mAverageLoad{};
 };
 
 

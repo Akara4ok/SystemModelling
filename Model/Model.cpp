@@ -52,3 +52,12 @@ void Model::summary() {
         mSummaryFunction(mElements, mCurrentTime);
     }
 }
+
+std::shared_ptr<Element> Model::getElementByName(const std::string& name) {
+    for (const auto& element : mElements) {
+        if(element->getName() == name){
+            return element;
+        }
+    }
+    return {};
+}

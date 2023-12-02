@@ -14,7 +14,7 @@ public:
     FirstPhaseMachine(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<TypedQueue<int>> queue);
 
     FirstPhaseMachine(std::string name, std::shared_ptr<ExpDist> gen,
-                      std::shared_ptr<PredicateElementPicker<int>> elementPicker,
+                      std::shared_ptr<ElementPicker> elementPicker,
                       std::shared_ptr<TypedQueue<int>> queue);
 
     void start(int particle);
@@ -25,21 +25,9 @@ public:
 
     std::shared_ptr<Element> getNextElement(int attempt);
 
-    std::shared_ptr<Queue> getQueue() const override { return mTypedQueue; }
-
-    void setElementPicker(std::shared_ptr<PredicateElementPicker<int>> picker) {
-        mPredElementPicker = picker;
-        Element::setElementPicker(picker);
-    };
-
-protected:
+private:
     int mAttempt{};
-    bool mProcessing{};
-    double mNextTime{};
-    double mAverageLoad{};
-
     std::shared_ptr<TypedQueue<int>> mTypedQueue;
-    std::shared_ptr<PredicateElementPicker<int>> mPredElementPicker;
 };
 
 #endif //TYPEDPROCESS_HPP

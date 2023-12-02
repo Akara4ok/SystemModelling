@@ -26,6 +26,7 @@ struct UniformRandomGen {
 
 class ExpDist {
 public:
+    ExpDist() = default;
     ExpDist(double lambda) : lambda(lambda){}
     double generateNext();
     UniformRandomGen mUniformGen;

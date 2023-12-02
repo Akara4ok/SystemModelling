@@ -15,6 +15,8 @@ public:
 
     void summary();
 
+    std::shared_ptr<Element> getElementByName(const std::string& name);
+
     void setSummaryFunction(std::function<void(const std::vector<std::shared_ptr<Element>>&, double)> summaryFunction) {
         mSummaryFunction = std::move(summaryFunction);
     }

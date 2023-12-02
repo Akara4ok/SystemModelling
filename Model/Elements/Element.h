@@ -26,7 +26,7 @@ public:
     virtual void log() const = 0;
 
     virtual double getNextTime(){ return mNextTime; }
-    double getCurrentTime(){ return mCurrentTime; }
+    double getCurrentTime() const { return mCurrentTime; }
     virtual std::string getName(){ return mName; }
     void setSummaryFunction(std::function<void(Element*)> summaryFunction) { mSummaryFunction = std::move(summaryFunction); }
 

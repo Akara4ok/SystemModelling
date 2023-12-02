@@ -5,15 +5,16 @@
 #include "FirstPhaseMachine.h"
 
 FirstPhaseMachine::FirstPhaseMachine(std::string name, std::shared_ptr<ExpDist> gen,
-                                        std::shared_ptr<TypedQueue<int>> queue) : Process(std::move(name), gen,
-                                                                                                          queue),
-                                                                                                  mTypedQueue(queue) {
+                                     std::shared_ptr<TypedQueue<int>> queue) : Process(std::move(name), gen,
+                                                                                       queue),
+                                                                               mTypedQueue(queue) {
     mNextTime = std::numeric_limits<double>::max();
 }
 
-FirstPhaseMachine::FirstPhaseMachine(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<PredicateElementPicker<int>> elementPicker,
+
+FirstPhaseMachine::FirstPhaseMachine(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<ElementPicker> elementPicker,
                                      std::shared_ptr<TypedQueue<int>> queue) : Process(std::move(name), gen, elementPicker, queue),
-                                                            mTypedQueue(queue), mPredElementPicker(elementPicker) {
+                                                            mTypedQueue(queue) {
     mNextTime = std::numeric_limits<double>::max();
 }
 
@@ -63,8 +64,9 @@ void FirstPhaseMachine::start() {
 }
 
 std::shared_ptr<Element> FirstPhaseMachine::getNextElement(int attempt) {
-    if(!mPredElementPicker){
-        return {};
+    auto predElementPicker = dynamic_cast<PredicateElementPicker<int>*>(mNextElementPicker.get());
+    if(!predElementPicker){
+        return mNextElementPicker->getNextElement();
     }
-    return mPredElementPicker->getNextElement(attempt);
+    return predElementPicker->getNextElement(attempt);
 }
