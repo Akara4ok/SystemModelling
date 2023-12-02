@@ -1,5 +1,5 @@
 target_sources(${PROJECT_NAME} PUBLIC
-        TimeGenerator.cpp TimeGenerator.h
+        ExpDist.cpp ExpDist.h
         Logger.cpp Logger.h
         ElementPicker.h
         Queue.cpp Queue.h

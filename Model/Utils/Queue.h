@@ -10,21 +10,14 @@
 
 class Queue {
 public:
-    Queue(int queueSize = std::numeric_limits<int>::max());
-
-    void setCurrentQueueSize(int queueSize) { mQueueSize = queueSize; }
-    virtual bool push();
+    virtual void push();
     virtual bool pop();
     virtual int getCurrentQueueSize() const { return mQueueSize; }
-    double getAverageQueue(double currentTime) const { return mSummedQueue / currentTime; }
-    void updateAverageQueue(double timeDiff);
-    bool isFull() const { return getCurrentQueueSize() < mMaxQueueSize; }
+    void setCurrentQueue(int queueSize) { mQueueSize = queueSize; }
 
 protected:
     int mQueueSize{};
-    int mMaxQueueSize{};
-    double mSummedQueue{};
 };
 
 
-#endif //LAB3_QUEUE_H
+#endif //QUEUE_H

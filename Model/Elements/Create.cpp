@@ -6,12 +6,7 @@
 #include <iostream>
 #include <utility>
 
-Create::Create(std::string name, std::shared_ptr<TimeGenerator> gen)
-        : Element(std::move(name), gen) {
-    mNextTime = mCurrentTime + mGen->generateNext();
-}
-
-Create::Create(std::string name, std::shared_ptr<TimeGenerator> gen, std::shared_ptr<ElementPicker> elementPicker)
+Create::Create(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<ElementPicker> elementPicker)
         : Element(std::move(name), gen, elementPicker) {
     mNextTime = mCurrentTime + mGen->generateNext();
 }
@@ -39,12 +34,4 @@ void Create::summary() {
 
 void Create::log() const {
     Logger::log(mCurrentTime, mName, "", std::nullopt, mProceed);
-}
-
-FreeStatus Create::isFree() {
-    return Full;
-}
-
-void Create::setInitialValues(double nextTime) {
-    mNextTime = nextTime;
 }

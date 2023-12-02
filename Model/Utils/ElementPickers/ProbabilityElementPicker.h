@@ -6,7 +6,7 @@
 #define PROBABILITYELEMENTPICKER_H
 
 #include "../ElementPicker.h"
-#include "../../../Distribution/UniformDist.h"
+#include "../ExpDist.h"
 #include <vector>
 #include <memory>
 
@@ -25,7 +25,7 @@ public:
 
 protected:
     std::vector<NextElement> mNextElements;
-    UniformDist mUniformDist;
+    UniformRandomGen mUniformDist;
 };
 
 

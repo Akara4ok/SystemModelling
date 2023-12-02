@@ -6,7 +6,6 @@
 #define COURSEWORK_TYPEDELEMENTPICKER_H
 
 #include "../ElementPicker.h"
-#include "../../../Distribution/UniformDist.h"
 #include <vector>
 #include <memory>
 

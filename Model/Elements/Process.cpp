@@ -6,7 +6,7 @@
 #include <iostream>
 #include <utility>
 
-Process::Process(std::string name, std::shared_ptr<TimeGenerator> gen, std::shared_ptr<Queue> queue, int processorsNum)
+Process::Process(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<Queue> queue, int processorsNum)
         : Element(std::move(name), gen), mQueue(queue) {
     mNextTime = std::numeric_limits<double>::max();
     for (int i = 0; i < processorsNum; ++i) {
@@ -14,7 +14,7 @@ Process::Process(std::string name, std::shared_ptr<TimeGenerator> gen, std::shar
     }
 }
 
-Process::Process(std::string name, std::shared_ptr<TimeGenerator> gen, std::shared_ptr<ElementPicker> elementPicker,
+Process::Process(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<ElementPicker> elementPicker,
                  std::shared_ptr<Queue> queue, int processorsNum)
         : Element(std::move(name), gen, elementPicker), mQueue(queue) {
     mNextTime = std::numeric_limits<double>::max();
@@ -32,12 +32,8 @@ void Process::start() {
             return;
         }
     }
-    if (mQueue->push()) {
-        Logger::log(mCurrentTime, mName, "Added to Queue");
-        return;
-    }
-    Logger::log(mCurrentTime, mName, "Fail");
-    mFailed++;
+    mQueue->push();
+    Logger::log(mCurrentTime, mName, "Added to Queue");
 }
 
 void Process::finish() {
@@ -77,11 +73,7 @@ void Process::finish() {
 
 
 void Process::updateCurrentTime(double currentTime) {
-    getQueue()->updateAverageQueue(currentTime - mCurrentTime);
-    if (isFree() != Free) {
-        mAverageLoad += (currentTime - mCurrentTime);
-    }
-    mSummedElements += (currentTime - mCurrentTime) * (getQueue()->getCurrentQueueSize() + (isFree() == Free ? 0 : 1));
+    updateAverageLoad(currentTime);
     Element::updateCurrentTime(currentTime);
 }
 
@@ -93,38 +85,27 @@ void Process::summary() {
     std::cout << "------------\n";
     std::cout << "Name: " << mName << "\n";
     std::cout << "Queue size: " << getQueue()->getCurrentQueueSize() << "\n";
-    std::cout << "Failed: " << mFailed << "\n";
     std::cout << "Processed items: " << mProceed << "\n";
-    std::cout << "Average queue size: " << getQueue()->getAverageQueue(mCurrentTime) << "\n";
-    std::cout << "Average load: " << mAverageLoad / mCurrentTime << "\n";
+    std::cout << "Average load: " << getAverageLoad() << "\n";
     std::cout << "------------\n";
 }
 
 void Process::log() const {
     int busyProcessors = 0;
-    for (auto mProcessor: getProcessors()) {
+    for (auto mProcessor: mProcessors) {
         if (mProcessor->mProcessing) {
             busyProcessors++;
         }
     }
-    Logger::log(mCurrentTime, mName, "", busyProcessors, mProceed, mFailed, getQueue()->getCurrentQueueSize());
+    Logger::log(mCurrentTime, mName, "", busyProcessors, mProceed, 0, getQueue()->getCurrentQueueSize());
 }
 
-int Process::getCurrentQueue() {
+int Process::getCurrentQueueSize() {
     return getQueue()->getCurrentQueueSize();
 }
 
-double Process::getAverageQueue() {
-    return getQueue()->getAverageQueue(mCurrentTime);
-}
-
-int Process::getFailures() const {
-    return mFailed;
-}
-
 double Process::getNextTime() {
-    auto processors = getProcessors();
-    auto nextElement = *std::min_element(processors.begin(), processors.end(),
+    auto nextElement = *std::min_element(mProcessors.begin(), mProcessors.end(),
                                                [](const std::shared_ptr<SubProcess>& p1, const std::shared_ptr<SubProcess>& p2) {
                                                    return p1->mNextTime < p2->mNextTime;
                                                });
@@ -132,7 +113,7 @@ double Process::getNextTime() {
 }
 
 bool Process::isFinished() {
-    for (auto& mProcessor: getProcessors()) {
+    for (auto& mProcessor: mProcessors) {
         if (std::abs(mProcessor->mNextTime - mCurrentTime) < 0.000001) {
             return true;
         }
@@ -140,28 +121,27 @@ bool Process::isFinished() {
     return false;
 }
 
-FreeStatus Process::isFree() {
-    for (auto& mProcessor: getProcessors()) {
-        if (!mProcessor->mProcessing) {
-            return Free;
-        }
-    }
-    if (getQueue()->isFull()) {
-        return Busy;
-    }
-    return Full;
-}
-
 void Process::setInitialValues(int currentQueueSize, std::vector<std::shared_ptr<SubProcess>> processors) {
-    mQueue->setCurrentQueueSize(currentQueueSize);
+    mQueue->setCurrentQueue(currentQueueSize);
     mProcessors = std::move(processors);
-}
-
-double Process::getAverageLoad() {
-    return mAverageLoad / mCurrentTime;
 }
 
 void Process::setBlocker(int num, std::function<bool(Process*)> blockingFunc) {
     mProcessors[num]->isBlocked = blockingFunc(this);
     mProcessors[num]->mBlockingPredicate = std::move(blockingFunc);
+}
+
+double Process::getAverageLoad(int procNum) {
+    if(procNum >= mProcessors.size()){
+        return {};
+    }
+    return mProcessors[procNum]->mAverageLoad / mCurrentTime;
+}
+
+void Process::updateAverageLoad(double currentTime) {
+    for (const auto& processor : mProcessors){
+        if(processor->mProcessing){
+            processor->mAverageLoad += (currentTime - mCurrentTime);
+        }
+    }
 }

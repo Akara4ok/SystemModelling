@@ -5,16 +5,8 @@
 
 #include "Queue.h"
 
-Queue::Queue(int queueSize) : mMaxQueueSize(queueSize) {
-
-}
-
-bool Queue::push() {
-    if(mQueueSize >= mMaxQueueSize){
-        return false;
-    }
+void Queue::push() {
     mQueueSize++;
-    return true;
 }
 
 bool Queue::pop() {
@@ -23,8 +15,4 @@ bool Queue::pop() {
     }
     mQueueSize--;
     return true;
-}
-
-void Queue::updateAverageQueue(double timeDiff) {
-    mSummedQueue += timeDiff * getCurrentQueueSize();
 }

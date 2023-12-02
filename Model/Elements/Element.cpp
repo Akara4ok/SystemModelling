@@ -6,11 +6,11 @@
 
 #include <utility>
 
-Element::Element(std::string name, std::shared_ptr<TimeGenerator> gen)
+Element::Element(std::string name, std::shared_ptr<ExpDist> gen)
         : mName(std::move(name)), mGen(gen) {
 }
 
-Element::Element(std::string name, std::shared_ptr<TimeGenerator> gen, std::shared_ptr<ElementPicker> elementPicker)
+Element::Element(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<ElementPicker> elementPicker)
         : mName(std::move(name)), mGen(gen), mNextElementPicker(elementPicker) {
 }
 
@@ -20,10 +20,6 @@ bool Element::isFinished() {
 
 void Element::updateCurrentTime(double currentTime) {
     mCurrentTime = currentTime;
-}
-
-void Element::setNextTime(double nextTime) {
-    mNextTime = nextTime;
 }
 
 std::shared_ptr<Element> Element::getNextElement() {

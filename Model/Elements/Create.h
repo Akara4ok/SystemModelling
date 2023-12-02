@@ -9,17 +9,12 @@
 
 class Create : public Element{
 public:
-    Create(std::string name, std::shared_ptr<TimeGenerator> gen);
-    Create(std::string name, std::shared_ptr<TimeGenerator> gen, std::shared_ptr<ElementPicker> elementPicker);
+    Create(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<ElementPicker> elementPicker);
 
     void start() override;
     void finish() override;
     void summary() override;
     void log() const override;
-
-    void setInitialValues(double nextTime);
-
-    FreeStatus isFree() override;
 };
 
 

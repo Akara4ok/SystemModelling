@@ -15,8 +15,6 @@ public:
 
     void finish() override;
 
-    FreeStatus isFree() override;
-
     void log() const override;
 
     void summary() override;

@@ -9,26 +9,13 @@
 #include "../Utils/Queue/TypedQueue.hpp"
 #include "../Utils/ElementPickers/PredicateElementPicker.hpp"
 
-struct SubMachineProcess : public SubProcess {
-    int mAttempt;
-
-    SubMachineProcess() {
-        mNextTime = std::numeric_limits<double>::max();
-    }
-
-    SubMachineProcess(bool processing, int attempt, double nextTime) : SubProcess(processing, nextTime),
-                                                                       mAttempt(attempt) {
-    }
-};
-
 class FirstPhaseMachine : public Process {
 public:
-    FirstPhaseMachine(std::string name, std::shared_ptr<TimeGenerator> gen, std::shared_ptr<TypedQueue<int>> queue,
-                      int processorNum = 1);
+    FirstPhaseMachine(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<TypedQueue<int>> queue);
 
-    FirstPhaseMachine(std::string name, std::shared_ptr<TimeGenerator> gen,
+    FirstPhaseMachine(std::string name, std::shared_ptr<ExpDist> gen,
                       std::shared_ptr<PredicateElementPicker<int>> elementPicker,
-                      std::shared_ptr<TypedQueue<int>> queue, int processorNum = 1);
+                      std::shared_ptr<TypedQueue<int>> queue);
 
     void start(int particle);
 
@@ -45,16 +32,12 @@ public:
         Element::setElementPicker(picker);
     };
 
-    std::vector<std::shared_ptr<SubProcess>> getProcessors() const override {
-        std::vector<std::shared_ptr<SubProcess>> res;
-        for (int i = 0; i < mTypedProcessors.size(); ++i) {
-            res.push_back(mTypedProcessors[i]);
-        }
-        return res;
-    }
-
 protected:
-    std::vector<std::shared_ptr<SubMachineProcess>> mTypedProcessors;
+    int mAttempt{};
+    bool mProcessing{};
+    double mNextTime{};
+    double mAverageLoad{};
+
     std::shared_ptr<TypedQueue<int>> mTypedQueue;
     std::shared_ptr<PredicateElementPicker<int>> mPredElementPicker;
 };
