@@ -53,6 +53,12 @@ void Process::updateCurrentTime(double currentTime) {
     Element::updateCurrentTime(currentTime);
 }
 
+void Process::updateAverageLoad(double currentTime) {
+    if (mProcessing) {
+        mAverageLoad += (currentTime - mCurrentTime);
+    }
+}
+
 void Process::summary() {
     if (mSummaryFunction) {
         mSummaryFunction(this);
@@ -89,10 +95,4 @@ void Process::setInitialValues(int currentQueueSize, bool isProcessing) {
 
 double Process::getAverageLoad() {
     return mAverageLoad / mCurrentTime;
-}
-
-void Process::updateAverageLoad(double currentTime) {
-    if (mProcessing) {
-        mAverageLoad += (currentTime - mCurrentTime);
-    }
 }

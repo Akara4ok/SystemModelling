@@ -24,7 +24,7 @@ MultiChannelProcess::MultiChannelProcess(std::string name, std::shared_ptr<ExpDi
 
 void MultiChannelProcess::start() {
     for (auto& mProcessor: mProcessors) {
-        if (!mProcessor.mProcessing && !mProcessor.isBlocked) {
+        if (!mProcessor.mProcessing && !mProcessor.isBlocked(this)) {
             Logger::log(mCurrentTime, mName, "Started");
             mProcessor.mProcessing = true;
             mProcessor.mNextTime = mCurrentTime + mGen->generateNext();
@@ -40,23 +40,9 @@ void MultiChannelProcess::finish() {
     Logger::log(mCurrentTime, mName, "Finish");
 
     for (auto& mProcessor: mProcessors) {
-        if(mProcessor.mBlockingPredicate && mProcessor.mBlockingPredicate(this)){
-            if(!mProcessor.isBlocked){
-                Logger::log(mCurrentTime, mName, "Block subprocess");
-            }
-            mProcessor.isBlocked = true;
-        } else {
-            if(mProcessor.isBlocked){
-                Logger::log(mCurrentTime, mName, "Unblock subprocess");
-            }
-            mProcessor.isBlocked = false;
-        }
-    }
-
-    for (auto& mProcessor: mProcessors) {
         if (std::abs(mProcessor.mNextTime - mCurrentTime) < 0.000001) {
             mProcessor.mProcessing = false;
-            if (mQueue->pop() && !mProcessor.isBlocked) {
+            if (mQueue->pop() && !mProcessor.isBlocked(this)) {
                 start();
             } else {
                 mProcessor.mNextTime = std::numeric_limits<double>::max();
@@ -85,12 +71,16 @@ void MultiChannelProcess::summary() {
 
 void MultiChannelProcess::log() const {
     int busyProcessors = 0;
-    for (const auto& mProcessor: mProcessors) {
-        if (mProcessor.mProcessing) {
+    int blockedProcessors = 0;
+    for (auto& processor: mProcessors) {
+        if (processor.mProcessing && !processor.isBlocked(this)) {
             busyProcessors++;
         }
+        if(processor.isBlocked(this)){
+            blockedProcessors++;
+        }
     }
-    Logger::log(mCurrentTime, mName, "", busyProcessors, mProceed, 0, getCurrentQueueSize());
+    Logger::log(mCurrentTime, mName, "", busyProcessors, mProceed, blockedProcessors, getCurrentQueueSize());
 }
 
 double MultiChannelProcess::getNextTime() {
@@ -115,8 +105,7 @@ void MultiChannelProcess::setInitialValues(int currentQueueSize, std::vector<Sub
     mProcessors = std::move(processors);
 }
 
-void MultiChannelProcess::setBlocker(int num, std::function<bool(Process*)> blockingFunc) {
-    mProcessors[num].isBlocked = blockingFunc(this);
+void MultiChannelProcess::setBlocker(int num, std::function<bool(const MultiChannelProcess*)> blockingFunc) {
     mProcessors[num].mBlockingPredicate = std::move(blockingFunc);
 }
 

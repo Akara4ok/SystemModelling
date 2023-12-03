@@ -16,8 +16,8 @@ public:
 
     static void log(double currentTime, const std::string& name = "", const std::string& event = "",
                     std::optional<int> processing = std::nullopt, std::optional<int> processed = std::nullopt,
-                    std::optional<int> failures = std::nullopt, std::optional<int> queueSize = std::nullopt,
-                    std::optional<int> type = std::nullopt);
+                    std::optional<int> blocked = std::nullopt, std::optional<int> queueSize = std::nullopt,
+                    std::optional<int> attempt = std::nullopt);
 
     static void saveLogFile();
 

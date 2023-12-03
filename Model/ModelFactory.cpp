@@ -26,8 +26,8 @@ Model ModelFactory::createModel1() {
                                                   std::shared_ptr<ProbabilityElementPicker>(
                                                           new PredicateElementPicker<int>({{Finished, 1}})),
                                                   std::make_shared<Queue>(), 2));
-    process3->setBlocker(1, [](Process* el){
-        return el->getCurrentQueueSize() < 2;
+    process3->setBlocker(1, [](const MultiChannelProcess* el){
+        return el->getCurrentQueueSize() <= 3;
     });
 
     std::shared_ptr<FirstPhaseMachine> process2(

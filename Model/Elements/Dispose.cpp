@@ -20,7 +20,7 @@ void Dispose::finish() {
 }
 
 void Dispose::log() const {
-    Logger::log(mCurrentTime, mName, "", 0, mProceed, 0, 0);
+    Logger::log(mCurrentTime, mName, "", 0, mProceed);
 }
 
 void Dispose::summary() {

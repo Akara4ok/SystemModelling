@@ -12,8 +12,7 @@ class MultiChannelProcess;
 struct SubProcess {
     bool mProcessing{};
     double mNextTime{};
-    bool isBlocked{};
-    std::function<bool(MultiChannelProcess*)> mBlockingPredicate;
+    std::function<bool(const MultiChannelProcess*)> mBlockingPredicate;
     double mAverageLoad{};
 
     SubProcess() {
@@ -21,6 +20,13 @@ struct SubProcess {
     }
 
     SubProcess(bool processing, double nextTime) : mProcessing(processing), mNextTime(nextTime) {
+    }
+
+    bool isBlocked(const MultiChannelProcess* process) const {
+        if(!mBlockingPredicate){
+            return false;
+        }
+        return mBlockingPredicate(process);
     }
 };
 
@@ -50,7 +56,7 @@ public:
 
     void setInitialValues(int currentQueueSize, std::vector<SubProcess> processors);
 
-    void setBlocker(int num, std::function<bool(Process*)> blockingFunc);
+    void setBlocker(int num, std::function<bool(const MultiChannelProcess*)> blockingFunc);
 private:
     std::vector<SubProcess> mProcessors;
 };
