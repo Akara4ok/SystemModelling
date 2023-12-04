@@ -16,6 +16,9 @@ Logger::Logger(std::string _filename) {
 void Logger::log(double currentTime, const std::string& name, const std::string& event, std::optional<int> processing,
                  std::optional<int> processed, std::optional<int> blocked, std::optional<int> queueSize,
                  std::optional<int> attempt) {
+    if(filename.empty()){
+        return;
+    }
     std::string logStr;
     logStr += std::to_string(currentTime) + ",";
     logStr += (!name.empty() ? name : "") + ",";
@@ -29,6 +32,9 @@ void Logger::log(double currentTime, const std::string& name, const std::string&
 }
 
 void Logger::saveLogFile() {
+    if(filename.empty()){
+        return;
+    }
     std::ofstream myfile(filename);
     myfile << "Current Time,Name,Event,Busy Processors,Processed,Blocked,QueueSize,Attempt\n";
     for (const auto & log : logs) {

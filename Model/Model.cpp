@@ -49,7 +49,7 @@ void Model::summary() {
         element->summary();
     }
     if(mSummaryFunction){
-        mSummaryFunction(mElements, mCurrentTime);
+        mSummaryFunction(this);
     }
 }
 

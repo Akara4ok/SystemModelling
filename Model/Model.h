@@ -17,14 +17,14 @@ public:
 
     std::shared_ptr<Element> getElementByName(const std::string& name);
 
-    void setSummaryFunction(std::function<void(const std::vector<std::shared_ptr<Element>>&, double)> summaryFunction) {
+    void setSummaryFunction(std::function<void(Model* model)> summaryFunction) {
         mSummaryFunction = std::move(summaryFunction);
     }
 
 private:
     double mCurrentTime{};
     std::vector<std::shared_ptr<Element>> mElements;
-    std::function<void(const std::vector<std::shared_ptr<Element>>&, double)> mSummaryFunction;
+    std::function<void(Model* model)> mSummaryFunction;
 };
 
 
