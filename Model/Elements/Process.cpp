@@ -6,12 +6,12 @@
 #include <iostream>
 #include <utility>
 
-Process::Process(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<Queue> queue) :
+Process::Process(std::string name, std::shared_ptr<Distribution> gen, std::shared_ptr<Queue> queue) :
         Element(std::move(name), gen), mQueue(queue) {
 
 }
 
-Process::Process(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<ElementPicker> elementPicker,
+Process::Process(std::string name, std::shared_ptr<Distribution> gen, std::shared_ptr<ElementPicker> elementPicker,
                  std::shared_ptr<Queue> queue)
         : Element(std::move(name), gen, elementPicker), mQueue(queue) {
     mNextTime = std::numeric_limits<double>::max();

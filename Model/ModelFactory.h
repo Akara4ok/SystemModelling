@@ -10,6 +10,7 @@
 class ModelFactory {
 public:
     static Model createModel1();
+    static Model createModel2();
 };
 
 

@@ -39,6 +39,10 @@ void Model::simulate(double totalTime) {
         for (const auto& element : mElements) {
             element->log();
         }
+
+        for (const auto& callback:mAdditionalCallbacks) {
+            callback(this);
+        }
     }
 
     summary();

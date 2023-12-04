@@ -13,9 +13,9 @@ class Process;
 
 class Process : public Element {
 public:
-    Process(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<Queue> queue);
+    Process(std::string name, std::shared_ptr<Distribution> gen, std::shared_ptr<Queue> queue);
 
-    Process(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<ElementPicker> elementPicker,
+    Process(std::string name, std::shared_ptr<Distribution> gen, std::shared_ptr<ElementPicker> elementPicker,
             std::shared_ptr<Queue> queue);
 
     void start() override;

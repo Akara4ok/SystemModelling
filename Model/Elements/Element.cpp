@@ -6,11 +6,11 @@
 
 #include <utility>
 
-Element::Element(std::string name, std::shared_ptr<ExpDist> gen)
+Element::Element(std::string name, std::shared_ptr<Distribution> gen)
         : mName(std::move(name)), mGen(gen) {
 }
 
-Element::Element(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<ElementPicker> elementPicker)
+Element::Element(std::string name, std::shared_ptr<Distribution> gen, std::shared_ptr<ElementPicker> elementPicker)
         : mName(std::move(name)), mGen(gen), mNextElementPicker(elementPicker) {
 }
 

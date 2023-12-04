@@ -4,31 +4,31 @@
 #include "Model/Utils/Logger.h"
 #include "Model/Elements/MultiChannelProcess.h"
 
+void simulate1();
+
 int main() {
     srand(time(NULL));
     Logger logger("Logs.csv");
-//    int num = 100;
-//    double avgLoad{};
-//    double avgProb{};
-
-//    for (int i = 0; i < num; ++i) {
-        Model model = ModelFactory::createModel1();
-
-//        model.getElementByName("Machine Second Phase")->setSummaryFunction([&avgLoad](Element* element){
-//            auto* casted_el = dynamic_cast<MultiChannelProcess*>(element);
-//            avgLoad += casted_el->getAverageLoad(1);
-//        });
-//        model.setSummaryFunction([&avgProb](Model* model){
-//            int defected = model->getElementByName("Defected")->getProceed();
-//            int proceed11 = model->getElementByName("First Machine First Phase")->getProceed();
-//            int proceed12 = model->getElementByName("Second Machine First Phase")->getProceed();
-//            avgProb += (double)defected / (proceed11 + proceed12);
-//        });
-        model.simulate(100000);
-//    }
-
-//    std::cout << "Avg load: " << avgLoad / num << "\n";
-//    std::cout << "Avg prob: " << avgProb / num << "\n";
-
+    simulate1();
     Logger::saveLogFile();
+}
+
+void simulate1(){
+    Model model = ModelFactory::createModel1();
+
+    std::ofstream additionalLogs("Additional Logs.csv");
+    additionalLogs << "Time, Avg load\n";
+    double interval = 25;
+    double sumInterval = 0;
+
+    model.addCallback([interval, &sumInterval, &additionalLogs](Model* model){
+        double currentTime = model->getCurrentTime();
+        MultiChannelProcess* process = dynamic_cast<MultiChannelProcess*>(model->getElementByName("Machine Second Phase").get());
+        while (sumInterval < currentTime){
+            additionalLogs << sumInterval << "," << process->getAverageLoad(1) << "\n";
+            sumInterval += interval;
+        }
+    });
+
+    model.simulate(100000);
 }

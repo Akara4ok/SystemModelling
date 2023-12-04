@@ -8,6 +8,7 @@
 #include <vector>
 #include <utility>
 #include <random>
+#include "Distribution.h"
 
 struct UniformRandomGen {
     UniformRandomGen(){
@@ -24,11 +25,11 @@ struct UniformRandomGen {
     std::uniform_real_distribution<> dis;
 };
 
-class ExpDist {
+class ExpDist : public Distribution{
 public:
     ExpDist() = default;
     ExpDist(double lambda) : lambda(lambda){}
-    double generateNext();
+    double generateNext() override;
     UniformRandomGen mUniformGen;
 private:
     double lambda{};

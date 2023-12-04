@@ -11,9 +11,9 @@
 
 class FirstPhaseMachine : public Process {
 public:
-    FirstPhaseMachine(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<TypedQueue<int>> queue);
+    FirstPhaseMachine(std::string name, std::shared_ptr<Distribution> gen, std::shared_ptr<TypedQueue<int>> queue);
 
-    FirstPhaseMachine(std::string name, std::shared_ptr<ExpDist> gen,
+    FirstPhaseMachine(std::string name, std::shared_ptr<Distribution> gen,
                       std::shared_ptr<ElementPicker> elementPicker,
                       std::shared_ptr<TypedQueue<int>> queue);
 

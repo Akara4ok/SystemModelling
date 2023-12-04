@@ -7,14 +7,14 @@
 #include <utility>
 #include <iostream>
 
-MultiChannelProcess::MultiChannelProcess(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<Queue> queue,
+MultiChannelProcess::MultiChannelProcess(std::string name, std::shared_ptr<Distribution> gen, std::shared_ptr<Queue> queue,
                                          int processorNum) : Process(std::move(name), gen, queue) {
     for (int i = 0; i < processorNum; ++i) {
         mProcessors.push_back({});
     }
 }
 
-MultiChannelProcess::MultiChannelProcess(std::string name, std::shared_ptr<ExpDist> gen,
+MultiChannelProcess::MultiChannelProcess(std::string name, std::shared_ptr<Distribution> gen,
                                          std::shared_ptr<ElementPicker> elementPicker, std::shared_ptr<Queue> queue,
                                          int processorNum) : Process(std::move(name), gen, elementPicker, queue){
     for (int i = 0; i < processorNum; ++i) {

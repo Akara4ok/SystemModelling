@@ -9,7 +9,7 @@
 
 class Create : public Element{
 public:
-    Create(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<ElementPicker> elementPicker);
+    Create(std::string name, std::shared_ptr<Distribution> gen, std::shared_ptr<ElementPicker> elementPicker);
 
     void start() override;
     void finish() override;

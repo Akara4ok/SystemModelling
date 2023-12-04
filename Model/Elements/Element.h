@@ -15,8 +15,8 @@
 
 class Element {
 public:
-    Element(std::string name, std::shared_ptr<ExpDist> gen);
-    Element(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<ElementPicker> elementPicker);
+    Element(std::string name, std::shared_ptr<Distribution> gen);
+    Element(std::string name, std::shared_ptr<Distribution> gen, std::shared_ptr<ElementPicker> elementPicker);
 
     virtual void start() = 0;
     virtual void finish() = 0;
@@ -40,7 +40,7 @@ protected:
     std::string mName{};
     double mCurrentTime{};
     double mNextTime{};
-    std::shared_ptr<ExpDist> mGen{};
+    std::shared_ptr<Distribution> mGen{};
     int mProceed{};
     std::function<void(Element*)> mSummaryFunction;
     std::shared_ptr<ElementPicker> mNextElementPicker;

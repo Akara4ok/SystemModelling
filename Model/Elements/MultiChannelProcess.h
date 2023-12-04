@@ -32,9 +32,9 @@ struct SubProcess {
 
 class MultiChannelProcess : public Process {
 public:
-    MultiChannelProcess(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<Queue> queue, int processorNum = 1);
+    MultiChannelProcess(std::string name, std::shared_ptr<Distribution> gen, std::shared_ptr<Queue> queue, int processorNum = 1);
 
-    MultiChannelProcess(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<ElementPicker> elementPicker,
+    MultiChannelProcess(std::string name, std::shared_ptr<Distribution> gen, std::shared_ptr<ElementPicker> elementPicker,
                         std::shared_ptr<Queue> queue, int processorNum = 1);
 
     void start() override;

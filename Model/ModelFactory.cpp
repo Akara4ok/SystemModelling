@@ -88,3 +88,60 @@ Model ModelFactory::createModel1() {
 
     return model;
 }
+
+Model ModelFactory::createModel2() {
+    std::shared_ptr<Dispose> finished(new Dispose("Finished"));
+    std::shared_ptr<Dispose> defected(new Dispose("Defected"));
+
+    std::shared_ptr<MultiChannelProcess> process3(new MultiChannelProcess("Machine Second Phase",
+                                                                          std::make_shared<ExpDist>(1.0 / 100),
+                                                                          std::shared_ptr<ProbabilityElementPicker>(
+                                                                                  new ProbabilityElementPicker({{finished, 1}})),
+                                                                          std::make_shared<Queue>(), 2));
+    process3->setBlocker(1, [](const MultiChannelProcess* el){
+        return el->getCurrentQueueSize() <= 3;
+    });
+
+    std::shared_ptr<FirstPhaseMachine> process2(
+            new FirstPhaseMachine("Second Machine First Phase",
+                                  std::make_shared<ExpDist>(1.0 / 60),
+                                  std::make_shared<TypedQueue<int>>()));
+    process2->setElementPicker(std::shared_ptr<PredicateElementPicker<int>>(
+            new PredicateElementPicker<int>({{process3, 0.92},
+                                             {process2, 0.08},
+                                             {defected}}, [](int attempt) { return attempt == 2; })));
+
+    std::shared_ptr<Element> process1(
+            new FirstPhaseMachine("First Machine First Phase",
+                                  std::make_shared<ExpDist>(1.0 / 40),
+                                  std::shared_ptr<ProbabilityElementPicker>(
+                                          new ProbabilityElementPicker({{process3, 0.96},
+                                                                        {process2, 0.04}})),
+                                  std::make_shared<TypedQueue<int>>()));
+
+    std::shared_ptr<Element> create(
+            new Create("Create",
+                       std::make_shared<ExpDist>(1.0 / 50),
+                       std::shared_ptr<LessQueuePicker>(new LessQueuePicker({process1, process2}))
+            ));
+
+    std::vector<std::shared_ptr<Element>> elements;
+    elements.push_back(create);
+    elements.push_back(process1);
+    elements.push_back(process2);
+    elements.push_back(process3);
+    elements.push_back(finished);
+    elements.push_back(defected);
+
+    auto model = Model(std::move(elements));
+    auto emptySummary = [](Element* el){};
+    create->setSummaryFunction(emptySummary);
+    process1->setSummaryFunction(emptySummary);
+    process2->setSummaryFunction(emptySummary);
+    process3->setSummaryFunction(emptySummary);
+    model.setSummaryFunction([](Model*){});
+    defected->setSummaryFunction(emptySummary);
+    finished->setSummaryFunction(emptySummary);
+
+    return model;
+}

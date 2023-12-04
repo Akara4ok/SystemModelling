@@ -21,10 +21,19 @@ public:
         mSummaryFunction = std::move(summaryFunction);
     }
 
+    void addCallback(std::function<void(Model* model)> callback){
+        mAdditionalCallbacks.push_back(std::move(callback));
+    }
+
+    double getCurrentTime(){
+        return mCurrentTime;
+    }
+
 private:
     double mCurrentTime{};
     std::vector<std::shared_ptr<Element>> mElements;
     std::function<void(Model* model)> mSummaryFunction;
+    std::vector<std::function<void(Model* model)>> mAdditionalCallbacks;
 };
 
 

@@ -6,7 +6,7 @@
 #include <iostream>
 #include <utility>
 
-Create::Create(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<ElementPicker> elementPicker)
+Create::Create(std::string name, std::shared_ptr<Distribution> gen, std::shared_ptr<ElementPicker> elementPicker)
         : Element(std::move(name), gen, elementPicker) {
     mNextTime = mCurrentTime + mGen->generateNext();
 }

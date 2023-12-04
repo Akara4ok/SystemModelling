@@ -4,7 +4,7 @@
 
 #include "FirstPhaseMachine.h"
 
-FirstPhaseMachine::FirstPhaseMachine(std::string name, std::shared_ptr<ExpDist> gen,
+FirstPhaseMachine::FirstPhaseMachine(std::string name, std::shared_ptr<Distribution> gen,
                                      std::shared_ptr<TypedQueue<int>> queue) : Process(std::move(name), gen,
                                                                                        queue),
                                                                                mTypedQueue(queue) {
@@ -12,7 +12,7 @@ FirstPhaseMachine::FirstPhaseMachine(std::string name, std::shared_ptr<ExpDist> 
 }
 
 
-FirstPhaseMachine::FirstPhaseMachine(std::string name, std::shared_ptr<ExpDist> gen, std::shared_ptr<ElementPicker> elementPicker,
+FirstPhaseMachine::FirstPhaseMachine(std::string name, std::shared_ptr<Distribution> gen, std::shared_ptr<ElementPicker> elementPicker,
                                      std::shared_ptr<TypedQueue<int>> queue) : Process(std::move(name), gen, elementPicker, queue),
                                                             mTypedQueue(queue) {
     mNextTime = std::numeric_limits<double>::max();

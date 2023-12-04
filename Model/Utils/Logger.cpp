@@ -8,15 +8,17 @@
 
 std::vector<std::string> Logger::logs;
 std::string Logger::filename;
+bool Logger::saveLogArray = false;
 
-Logger::Logger(std::string _filename) {
+Logger::Logger(std::string _filename, bool _saveLogArray) {
     filename = std::move(_filename);
+    saveLogArray = _saveLogArray;
 };
 
 void Logger::log(double currentTime, const std::string& name, const std::string& event, std::optional<int> processing,
                  std::optional<int> processed, std::optional<int> blocked, std::optional<int> queueSize,
                  std::optional<int> attempt) {
-    if(filename.empty()){
+    if(filename.empty() && !saveLogArray){
         return;
     }
     std::string logStr;

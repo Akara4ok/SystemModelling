@@ -12,7 +12,7 @@
 
 class Logger {
 public:
-    Logger(std::string filename);
+    Logger(std::string filename, bool saveLogArray = true);
 
     static void log(double currentTime, const std::string& name = "", const std::string& event = "",
                     std::optional<int> processing = std::nullopt, std::optional<int> processed = std::nullopt,
@@ -23,6 +23,7 @@ public:
 
 private:
     static std::string filename;
+    static bool saveLogArray;
     static std::vector<std::string> logs;
 };
 
