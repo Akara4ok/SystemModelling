@@ -12,7 +12,9 @@ Dispose::Dispose(std::string name) : Element(std::move(name), nullptr) {
 }
 
 void Dispose::start() {
-    mProceed++;
+    if(mIsExperiment && mCurrentTime >= mStartObserveTime || !mIsExperiment){
+        mProceed++;
+    }
 }
 
 void Dispose::finish() {

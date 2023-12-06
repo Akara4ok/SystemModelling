@@ -6,11 +6,12 @@
 
 void simulate1();
 void simulate2();
+void simulate3();
 
 int main() {
     srand(time(NULL));
-    Logger logger("Logs.csv");
-    simulate2();
+//    Logger logger("Logs.csv");
+    simulate3();
     Logger::saveLogFile();
 }
 
@@ -83,4 +84,30 @@ void simulate2() {
                        << ";" << values[3][i] << ";" << values[4][i] << "\n";
         sumInterval += interval;
     }
+}
+
+void simulate3() {
+    int num = 80;
+    double avgLoad{};
+    double avgProb{};
+
+    for (int i = 0; i < num; ++i) {
+        Model model = ModelFactory::createModel2();
+
+        model.getElementByName("Machine Second Phase")->setSummaryFunction([&avgLoad](Element* element){
+            auto* casted_el = dynamic_cast<MultiChannelProcess*>(element);
+            avgLoad += casted_el->getAverageLoad(1);
+        });
+        model.setSummaryFunction([&avgProb](Model* model){
+            int defected = model->getElementByName("Defected")->getProceed();
+            int proceed11 = model->getElementByName("First Machine First Phase")->getProceed();
+            int proceed12 = model->getElementByName("Second Machine First Phase")->getProceed();
+            avgProb += (double)defected / (proceed11 + proceed12);
+        });
+        model.setExperimentData(70000);
+        model.simulate(200000);
+    }
+
+    std::cout << "Avg load: " << avgLoad / num << "\n";
+    std::cout << "Avg prob: " << avgProb / num << "\n";
 }

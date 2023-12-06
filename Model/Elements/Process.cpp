@@ -29,7 +29,9 @@ void Process::start() {
 }
 
 void Process::finish() {
-    mProceed++;
+    if(mIsExperiment && mCurrentTime >= mStartObserveTime || !mIsExperiment){
+        mProceed++;
+    }
     Logger::log(mCurrentTime, mName, "Finish");
 
     if (std::abs(mNextTime - mCurrentTime) < 0.000001) {
@@ -49,7 +51,9 @@ void Process::finish() {
 
 
 void Process::updateCurrentTime(double currentTime) {
-    updateAverageLoad(currentTime);
+    if(mIsExperiment && mCurrentTime >= mStartObserveTime || !mIsExperiment){
+        updateAverageLoad(currentTime);
+    }
     Element::updateCurrentTime(currentTime);
 }
 
@@ -94,5 +98,8 @@ void Process::setInitialValues(int currentQueueSize, bool isProcessing) {
 }
 
 double Process::getAverageLoad() {
+    if(!mIsExperiment){
+        return mAverageLoad / (mCurrentTime - mStartObserveTime);
+    }
     return mAverageLoad / mCurrentTime;
 }

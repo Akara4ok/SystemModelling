@@ -34,6 +34,11 @@ public:
 
     void setElementPicker(std::shared_ptr<ElementPicker> picker) { mNextElementPicker = picker; };
 
+    void setExperimentData(double startObserveTime) {
+        mIsExperiment = true;
+        mStartObserveTime = startObserveTime;
+    };
+
 protected:
     std::shared_ptr<Element> getNextElement();
 
@@ -44,6 +49,9 @@ protected:
     int mProceed{};
     std::function<void(Element*)> mSummaryFunction;
     std::shared_ptr<ElementPicker> mNextElementPicker;
+
+    bool mIsExperiment{};
+    double mStartObserveTime{};
 };
 
 

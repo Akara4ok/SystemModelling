@@ -15,7 +15,9 @@ void Create::start() {
 }
 
 void Create::finish() {
-    mProceed++;
+    if(mIsExperiment && mCurrentTime >= mStartObserveTime || !mIsExperiment){
+        mProceed++;
+    }
     Logger::log(mCurrentTime, mName, "Finished");
     mNextTime = mCurrentTime + mGen->generateNext();
     auto nextElement = getNextElement();

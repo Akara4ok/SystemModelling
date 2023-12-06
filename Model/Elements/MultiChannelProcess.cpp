@@ -36,7 +36,9 @@ void MultiChannelProcess::start() {
 }
 
 void MultiChannelProcess::finish() {
-    mProceed++;
+    if(mIsExperiment && mCurrentTime >= mStartObserveTime || !mIsExperiment){
+        mProceed++;
+    }
     Logger::log(mCurrentTime, mName, "Finish");
 
     for (auto& mProcessor: mProcessors) {
@@ -112,6 +114,9 @@ void MultiChannelProcess::setBlocker(int num, std::function<bool(const MultiChan
 double MultiChannelProcess::getAverageLoad(int procNum) {
     if(procNum >= mProcessors.size()){
         return {};
+    }
+    if(mIsExperiment){
+        return mProcessors[procNum].mAverageLoad / (mCurrentTime - mStartObserveTime);
     }
     return mProcessors[procNum].mAverageLoad / mCurrentTime;
 }

@@ -34,7 +34,9 @@ void FirstPhaseMachine::start(int attempt) {
 }
 
 void FirstPhaseMachine::finish() {
-    mProceed++;
+    if(mIsExperiment && mCurrentTime >= mStartObserveTime || !mIsExperiment){
+        mProceed++;
+    }
     int attempt = mAttempt;
     if (std::abs(mNextTime - mCurrentTime) < 0.000001) {
         Logger::log(mCurrentTime, mName, "Finish", std::nullopt, std::nullopt, std::nullopt, std::nullopt,

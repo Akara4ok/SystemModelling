@@ -29,6 +29,8 @@ public:
         return mCurrentTime;
     }
 
+    void setExperimentData(double mStartObserveTime);
+
 private:
     double mCurrentTime{};
     std::vector<std::shared_ptr<Element>> mElements;

@@ -65,3 +65,9 @@ std::shared_ptr<Element> Model::getElementByName(const std::string& name) {
     }
     return {};
 }
+
+void Model::setExperimentData(double mStartObserveTime) {
+    for (const auto& element : mElements) {
+        element->setExperimentData(mStartObserveTime);
+    }
+}
