@@ -4,18 +4,19 @@
 #include "Model/Utils/Logger.h"
 #include "Model/Elements/MultiChannelProcess.h"
 
-void simulate1();
-void simulate2();
-void simulate3();
+void findMixedState1();
+void findMixedState2();
+void tacticalExperiment();
+void analysisOfVariance();
 
 int main() {
     srand(time(NULL));
 //    Logger logger("Logs.csv");
-    simulate3();
+    analysisOfVariance();
     Logger::saveLogFile();
 }
 
-void simulate1() {
+void findMixedState1() {
     std::ofstream additionalLogs("Additional Logs.csv");
     std::vector<std::vector<double>> values(5);
     double interval = 25;
@@ -47,7 +48,7 @@ void simulate1() {
     }
 }
 
-void simulate2() {
+void findMixedState2() {
     std::ofstream additionalLogs("Additional Logs.csv");
     std::vector<std::vector<double>> values(5);
     double interval = 25;
@@ -86,7 +87,7 @@ void simulate2() {
     }
 }
 
-void simulate3() {
+void tacticalExperiment() {
     int num = 80;
     double avgLoad{};
     double avgProb{};
@@ -104,10 +105,78 @@ void simulate3() {
             int proceed12 = model->getElementByName("Second Machine First Phase")->getProceed();
             avgProb += (double)defected / (proceed11 + proceed12);
         });
-        model.setExperimentData(70000);
+        model.setExperimentData(60000);
         model.simulate(200000);
     }
 
     std::cout << "Avg load: " << avgLoad / num << "\n";
     std::cout << "Avg prob: " << avgProb / num << "\n";
+}
+
+void analysisOfVariance() {
+    int num = 80;
+    int level = 3;
+
+    std::vector<std::vector<double>> avgLoads(num, std::vector<double>(level));
+
+    //collect avg
+    for (int j = 0; j < level; ++j) {
+        for (int i = 0; i < num; ++i) {
+            Model model = ModelFactory::createModel2();
+            auto* secondPhase = dynamic_cast<MultiChannelProcess*>(model.getElementByName("Machine Second Phase").get());
+            if(j == 0){
+                secondPhase->setBlocker(1, [](const MultiChannelProcess* el){
+                    return el->getCurrentQueueSize() <= 3;
+                });
+            } else if(j == 1){
+                secondPhase->setBlocker(1, [](const MultiChannelProcess* el){
+                    return el->getCurrentQueueSize() <= 2;
+                });
+            } else if(j == 2){
+                secondPhase->setBlocker(1, [](const MultiChannelProcess* el){
+                    return el->getCurrentQueueSize() <= 1;
+                });
+            }
+            secondPhase->setSummaryFunction([&avgLoads, i, j](Element* element){
+                auto* casted_el = dynamic_cast<MultiChannelProcess*>(element);
+                avgLoads[i][j] = casted_el->getAverageLoad(1);
+            });
+            model.setSummaryFunction([](Model* model){});
+            model.setExperimentData(60000);
+            model.simulate(200000);
+        }
+    }
+
+    //calculate averages
+    std::vector<double> avgByLevel(level);
+    double totalAvg{};
+
+    for (int j = 0; j < level; ++j) {
+        double levelSum{};
+        for (int i = 0; i < num; ++i) {
+            levelSum += avgLoads[i][j];
+        }
+        avgByLevel[j] = levelSum / num;
+        totalAvg += levelSum;
+    }
+    totalAvg /= level * num;
+
+    //calculate F
+    double sigma1{};
+    double sigma2{};
+
+    for (int j = 0; j < level; ++j) {
+        sigma1 += num * pow(avgByLevel[j] - totalAvg, 2);
+    }
+    sigma1 *= level * num - level;
+
+    for (int j = 0; j < level; ++j) {
+        for (int i = 0; i < num; ++i) {
+            sigma2 += num * pow(avgLoads[i][j] - avgByLevel[j], 2);
+        }
+    }
+    sigma2 *= level - 1;
+
+    double f = sigma1 / sigma2;
+    std::cout << "F: " << f << "\n";
 }
